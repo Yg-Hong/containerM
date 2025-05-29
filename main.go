@@ -33,7 +33,8 @@ func run() {
 
 	// isolation namespace
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWPID,
+		Cloneflags: syscall.CLONE_NEWPID |
+			syscall.CLONE_NEWUTS,
 	}
 
 	must(cmd.Run())
@@ -42,6 +43,8 @@ func run() {
 // Exec in child process
 func child() {
 	fmt.Printf("Running child process PID %d\n", syscall.Getpid())
+
+	must(syscall.Sethostname([]byte("containerM")), "set hostname")
 
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
