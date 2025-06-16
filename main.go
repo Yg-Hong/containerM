@@ -48,9 +48,32 @@ func child() {
 	must(syscall.Sethostname([]byte("containerM")), "set hostname")
 
 	// Configure new root
-	newRoot := "/tmp/containerRoot"
-	must(syscall.Chroot(newRoot), "chroot")
-	must(os.Chdir("/"), "chdir")
+	newRoot := "/tmp/ubuntufs"
+	putOld := newRoot + "/.pivot_root"
+
+	// Mount point isolation
+	must(syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""), "make mount private")
+
+	// bind mount new root to itself (required by pivot_root)
+	must(syscall.Mount(newRoot, newRoot, "", syscall.MS_BIND|syscall.MS_REC, ""), "bind mount newRoot")
+
+	// make .pivot_root directory
+	must(os.MkdirAll(putOld, 0700), "create putOld")
+
+	// pivot_root(new_root, put_old)
+	must(syscall.PivotRoot(newRoot, putOld), "pivot_root")
+
+	// change working directory to new root
+	must(os.Chdir("/"), "chdir to /")
+
+	// unmount old root
+	must(syscall.Unmount("/.pivot_root", syscall.MNT_DETACH), "unmount old root")
+	must(os.RemoveAll("/.pivot_root"), "remove old root")
+
+	// mount /proc, /sys, /dev
+	must(syscall.Mount("proc", "/proc", "proc", 0, ""), "mount /proc")
+	must(syscall.Mount("sysfs", "/sys", "sysfs", 0, ""), "mount /sys")
+	must(syscall.Mount("tmpfs", "/dev", "tmpfs", 0, ""), "mount /dev")
 
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
