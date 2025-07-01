@@ -34,7 +34,7 @@ containerM/
 │    ├── mount.go # /proc, /sys 마운트
 │    ├── net.go # (확장 가능)
 │    └── dev.go # /dev 마운트 및 디바이스 생성
-├── network/
+├── scripts/
 │    ├── host_setup.sh # 호스트 측 veth/bridge 설정
 │    └── container_setup.sh # 컨테이너 측 eth0 설정
 ├── utils/
