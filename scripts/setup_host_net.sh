@@ -4,7 +4,7 @@ set -e
 CONTAINER_PID=$1
 VETH_HOST=veth_host_$CONTAINER_PID
 VETH_CONT=veth_cont_$CONTAINER_PID
-BRIDGE=br0
+BRIDGE=br0_cm
 
 # Create bridge if it does not exist
 if ! ip link show $BRIDGE > /dev/null 2>&1; then
