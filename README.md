@@ -1,6 +1,6 @@
 # containerM 🐳
 
-**`containerM`**는 Go 언어로 구현한 경량 컨테이너 런타임입니다.  
+`containerM`는 Go 언어로 구현한 Linux 환경 경량 컨테이너 런타임입니다.
 컨테이너의 핵심 개념인 **네임스페이스, cgroups, pivot_root, 가상 네트워크** 등을 직접 다루며, 
 컨테이너가 어떻게 작동하는지를 학습하고 실험하기 위한 목적으로 제작되었습니다.
 
@@ -47,9 +47,8 @@ containerM/
 ## ⚙️ 빌드 및 실행 방법
 
 ### 0. 테스트 환경
-* wsl
-* container OS(ubuntu)
-
+* ubuntu 24.04.2
+  
 ### 1. 빌드
 
 ```bash
